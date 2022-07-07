@@ -1,7 +1,7 @@
 import os
 import cv2
 import debugpy
-import pickle #Will take off after stop using files to storage the histograms
+import pickle
 import numpy as np
 import glob
 import pandas as pd
@@ -12,7 +12,7 @@ import time
 
 #debugpy.listen(("0.0.0.0", 5678))
 #print("Waiting for client to attach...")
-#debugpy.wait_for_client()
+# debugpy.wait_for_client()
 
 """
 ImageRecognition class provides the way to find the best matches for a given
@@ -70,14 +70,13 @@ class ImageRecognition:
             self.histogramSize = [8]
             self.histogramRange = [0, 256]
         if type == 1:
-            self.histogramType = [0,1]
-            self.histogramSize = [8,8]
+            self.histogramType = [0, 1]
+            self.histogramSize = [8, 8]
             self.histogramRange = [0, 256, 0, 256]
         if type == 2:
-            self.histogramType = [0,1,2]
-            self.histogramSize = [8,8,8]
+            self.histogramType = [0, 1, 2]
+            self.histogramSize = [8, 8, 8]
             self.histogramRange = [0, 256, 0, 256, 0, 256]
-
 
     def setDatabaseConnection(self, databaseConnection):
         self.databaseConnection = databaseConnection
@@ -129,28 +128,30 @@ class ImageRecognition:
             # extract a 3D RGB color histogram from the image,
             # using 8 bins per channel, normalize, and update
             # the index
-            hist = cv2.calcHist([image], self.histogramType, None, self.histogramSize, self.histogramRange)
+            hist = cv2.calcHist([image], self.histogramType,
+                                None, self.histogramSize, self.histogramRange)
             hist = cv2.normalize(hist, None)
 
-
             # todo: This is going to be a db record
-            # path = 
+            # path =
             #self.databaseCursor.execute('SELECT * FROM image_histogram')
-            self.databaseCursor.execute('INSERT INTO image_histogram (path, histogram, created_at, image_source_id, type) VALUES (%s, %s, %s, %s, %s)', 
-                (path, pickle.dumps(hist), int(time.time()), 1, 0)
-            )
+            self.databaseCursor.execute('INSERT INTO image_histogram (path, histogram, created_at, image_source_id, type) VALUES (%s, %s, %s, %s, %s)',
+                                        (path, pickle.dumps(hist),
+                                         int(time.time()), 1, 0)
+                                        )
             self.databaseConnection.commit()
 
         return pickle.TRUE
 
     def loadHistograms(self):
         """
-        Loading the train data histograms from pickle file
+        Loading the train data histograms
         """
 
-        self.databaseCursor.execute("SELECT * FROM image_histogram WHERE image_source_id = 1 AND path = '/home/app/covers/9788328042315.jpg'")
+        self.databaseCursor.execute(
+            "SELECT * FROM image_histogram WHERE image_source_id = 1'")
         rows = self.databaseCursor.fetchall()
-        
+
         for row in rows:
             self.trainedHistograms.append((row[1], pickle.loads(row[3])))
 
@@ -169,7 +170,8 @@ class ImageRecognition:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             # extract a 3D RGB color histogram from the image,
             # using 8 bins per channel, normalize, and update the index
-            histogram = cv2.calcHist([image], self.histogramType, None, self.histogramSize, self.histogramRange)
+            histogram = cv2.calcHist(
+                [image], self.histogramType, None, self.histogramSize, self.histogramRange)
             histogram = cv2.normalize(histogram, None)
             self.queryHistograms.append((path, histogram))
 
@@ -183,7 +185,8 @@ class ImageRecognition:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # extract a 3D RGB color histogram from the image,
         # using 8 bins per channel, normalize, and update the index
-        hist = cv2.calcHist([image], self.histogramType, None, self.histogramSize, self.histogramRange)
+        hist = cv2.calcHist([image], self.histogramType,
+                            None, self.histogramSize, self.histogramRange)
         hist = cv2.normalize(hist, None)
         self.queryHistograms.append((self.queryImage, hist))
 
@@ -354,8 +357,6 @@ class ImageRecognition:
                     matches = self.flannInstance.knnMatch(q_des, m_des, k=2)
                 except BaseException:
                     continue
-
-
 
                 # ratio query as per Lowe's paper
                 matchesCounter = 0
