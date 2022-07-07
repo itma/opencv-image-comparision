@@ -131,10 +131,6 @@ class ImageRecognition:
             hist = cv2.calcHist([image], self.histogramType,
                                 None, self.histogramSize, self.histogramRange)
             hist = cv2.normalize(hist, None)
-
-            # todo: This is going to be a db record
-            # path =
-            #self.databaseCursor.execute('SELECT * FROM image_histogram')
             self.databaseCursor.execute('INSERT INTO image_histogram (path, histogram, created_at, image_source_id, type) VALUES (%s, %s, %s, %s, %s)',
                                         (path, pickle.dumps(hist),
                                          int(time.time()), 1, 0)
