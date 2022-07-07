@@ -3,6 +3,19 @@ A simple OpenCV implementation to perform image comparison at a scale.
 
 The image comparison mainly bases on the OpenCV histograms matching method which is used to prefilter and narrow the results for the further processing by the structural_similarity method imported from skimage.metrics. Overall, the approach works well if images being compared are of the same source, and does not work well enough for the scenario like a comparison of a book cover taken by a mobile camera against a set of book covers downloaded from the net.
 
+### Initial setup ###
+
+```
+# Prepare docker image
+docker build -f Dockerfile .
+
+# If you have a PG instance running on the host use the below
+sudo docker run --network=host -p 5678:5678 -it -v ~/path_to_the_script_on_the_host:/home/app image_id /bin/bash
+
+# Run the script
+root@d2118b2356bb:/home/app# python image_recognition.py
+```
+
 ### Histograms - inital import ###
 
 ```
