@@ -1,5 +1,5 @@
 # opencv-image-comparision
-A simple OpenCV implementation to perform image comparison at a scale.
+A simple OpenCV implementation to perform image comparison at scale.
 
 The image comparison mainly bases on the OpenCV histograms matching method which is used to prefilter and narrow the results for the further processing by the structural_similarity method imported from skimage.metrics. Overall, the approach works well if images being compared are of the same source, and does not work well enough for the scenario like a comparison of a book cover taken by a mobile camera against a set of book covers downloaded from the net. Originally inspired by https://towardsdatascience.com/judging-a-book-by-its-cover-1365d001ef50.
 
